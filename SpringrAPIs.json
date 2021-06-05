@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "412a9f1a-230f-4b54-8778-610558d35ba9",
+		"name": "Springr Test Laravel",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add Employee",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "fullName",
+							"value": "test",
+							"type": "text"
+						},
+						{
+							"key": "email",
+							"value": "tset@gmail.com",
+							"type": "text"
+						},
+						{
+							"key": "dateOfJoining",
+							"value": "01-01-2016",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/home/testing/Pictures/Photos/lonely_leaf-wallpaper-1366x768.jpg"
+						}
+					],
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/employee",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"employee"
+					]
+				},
+				"description": "API to add new employee"
+			},
+			"response": []
+		},
+		{
+			"name": "Employee List",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/employee",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"employee"
+					]
+				},
+				"description": "API to get employee list"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Employee",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/employee/5",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"employee",
+						"5"
+					]
+				},
+				"description": "API to delete employee"
+			},
+			"response": []
+		}
+	]
+}
