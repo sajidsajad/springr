@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" >
 
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <!-- Importing icon cdn -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <!-- Importing datepicker cdn -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js">
-    </script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 <body>
@@ -65,7 +60,8 @@
           <h4 class="modal-title" id="ajaxEmployeeModal"></h4>
         </div>
         <div class="modal-body">
-          <form action="javascript:void(0)" id="addEditEmployeeForm" name="addEditEmployeeForm" class="form-horizontal" method="POST">
+          
+          <form action="javascript:void(0)" enctype="multipart/form-data" id="addEditEmployeeForm" name="addEditEmployeeForm" class="form-horizontal" method="POST">
             <input type="hidden" name="id" id="id">
             <div class="form-group row">
               <label for="email" class="col-sm-3 control-label">Email</label>
@@ -85,28 +81,17 @@
               <label for="dateOfJoining" class="col-sm-3 control-label">Date of Joining</label>
               <div class="col-sm-7">
               <!-- <input type="date" id="birthday" name="birthday"> -->
-                <input type="date" class="form-control col-sm-9" id="dateOfJoining" name="dateOfJoining" required="">
-                <i class="fa fa-calendar col-sm-2" onclick="setDatepicker(this)"></i>
+                <input type="date" class="form-control" id="dateOfJoining" name="dateOfJoining" required="">
               </div>
             </div>  
 
             <div class="form-group row">
               <label for="dateOfLeaving" class="col-sm-3 control-label">Date of Leaving</label>
-              <div class="col-sm-7">
-                <input type="date" class="form-control" id="dateOfLeaving" name="dateOfLeaving" placeholder="Enter Book Code" value="" maxlength="50">
+              <div class="col-sm-7" style="display: -webkit-box;">
+                <input type="date" class="form-control col-sm-6" id="dateOfLeaving" name="dateOfLeaving">
+                <input class="form-check-inline col-sm-6" type="checkbox" style="height: 32px;width: 50px;" value="" id="flexCheckChecked"/>
+                <label class="form-check-label" style="margin-left: 10px;" for="flexCheckChecked">Still working</label>
               </div>
-              <div class="form-check">
-                <input
-                    class="form-check-input"
-                    type="checkbox"
-                    value=""
-                    id="flexCheckChecked"
-                    checked
-                />
-                <label class="form-check-label" for="flexCheckChecked">
-                    Checked checkbox
-                </label>
-                </div>
             </div>
 
             <div class="form-group row">
@@ -122,8 +107,7 @@
             </div>
           </form>
         </div>
-        <div class="modal-footer">
-          
+        <div class="modal-footer">          
         </div>
       </div>
     </div>
@@ -164,17 +148,24 @@
 
         });
 
-        $('body').on('click', '#btn-save', function (event) {
 
-              var id = $("#id").val();
-              var email = $("#email").val();
-              var fullName = $("#fullName").val();
-              var dateOfJoining = $("#dateOfJoining").val();
-              var image = $("#image").value;
-            //   var image = fullPath.split("\\").pop();
-            //   console.log(fullPath);
-              console.log(image);
+        //  add employee
+        
+        // $('body').on('click', '#btn-save', function (event) {
+        // $('form').on('submit', '#btn-save', function (event) {
+            $( 'form' ).submit(function ( event ) {
 
+            //   var id = $("#id").val();
+            //   var email = $("#email").val();
+            //   var fullName = $("#fullName").val();
+            //   var dateOfJoining = $("#dateOfJoining").val();
+            //   var image = $("#image").value;
+            // //   var image = fullPath.split("\\").pop();
+            // //   console.log(fullPath);
+            //   console.log(image);
+            event.preventDefault();
+            var formData = new FormData(this);
+            console.log(formData);
               $("#btn-save").html('Please Wait...');
               $("#btn-save").attr("disabled", true);
             
@@ -182,13 +173,14 @@
             $.ajax({
                 type:"POST",
                 url: "{{ url('api/employee') }}",
-                data: {
-                  id:id,
-                  email:email,
-                  fullName:fullName,
-                  dateOfJoining:dateOfJoining,
-                  image:image,
-                },
+                // data: {
+                //   id:id,
+                //   email:email,
+                //   fullName:fullName,
+                //   dateOfJoining:dateOfJoining,
+                //   image:image,
+                // },
+                data: formData,
                 dataType: 'json',
                 success: function(res){
                 window.location.reload();
