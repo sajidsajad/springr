@@ -13,7 +13,6 @@ class Employee extends Model
         'full_name',
         'email',
         'date_of_joining',
-        'date_of_leaving',
         'image',
     ];
 }

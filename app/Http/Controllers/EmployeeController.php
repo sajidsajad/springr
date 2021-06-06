@@ -8,7 +8,7 @@ use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
-    public function addEmployee(Request $request){
+    public function addEmployee(Request $request){ 
         // dd($request);
         $validator = $this->checkValidation($request);
 
@@ -68,6 +68,16 @@ class EmployeeController extends Controller
 
         $data['employees'] = Employee::select('id','full_name','email','experience','image')->orderBy('id','desc')->paginate(5);   
         return view('employee',$data);
+
+        
+        // to test the API in postman
+        // $employees = Employee::orderBy('id','desc')->get(['id','full_name','email','experience','image']);
+        // return response()->json([
+        //     "responseCode" => "200",
+        //     "totalEmployees" => count($employees),
+        //     "data" => $employees
+        // ], 200);
+
     }
 
     public function deleteEmployee(Request $request){

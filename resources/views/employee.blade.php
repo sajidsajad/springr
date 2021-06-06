@@ -61,26 +61,25 @@
         </div>
         <div class="modal-body">
           
-          <form action="javascript:void(0)" enctype="multipart/form-data" id="addEditEmployeeForm" name="addEditEmployeeForm" class="form-horizontal" method="POST">
-            <input type="hidden" name="id" id="id">
+          <form action="javascript:void(0)" enctype="multipart/form-data" id="addEditEmployeeForm" name="addEditEmployeeForm" class="form-horizontal">
+            <input type="hidden" name="employee_id" id="employee_id">
             <div class="form-group row">
-              <label for="email" class="col-sm-3 control-label">Email</label>
+              <label for="name" class="col-sm-3 control-label">Email</label>
               <div class="col-sm-7">
                 <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email address" value="" required="">
               </div>
             </div>  
 
             <div class="form-group row">
-              <label for="fullName" class="col-sm-3 control-label">Full Name</label>
+              <label for="name" class="col-sm-3 control-label">Full Name</label>
               <div class="col-sm-7">
                 <input type="text" class="form-control" id="fullName" name="fullName" placeholder="Enter your full name" value="" maxlength="50" required="">
               </div>
             </div>
 
             <div class="form-group row">
-              <label for="dateOfJoining" class="col-sm-3 control-label">Date of Joining</label>
+              <label for="name" class="col-sm-3 control-label">Date of Joining</label>
               <div class="col-sm-7">
-              <!-- <input type="date" id="birthday" name="birthday"> -->
                 <input type="date" class="form-control" id="dateOfJoining" name="dateOfJoining" required="">
               </div>
             </div>  
@@ -97,14 +96,16 @@
             <div class="form-group row">
               <label for="image" class="col-sm-3 control-label">Upload Image</label>
               <div class="col-sm-7">
-              <input type="file" id="image" name="image" class="form-control" placeholder="image">
+              <input type="file" id="image" name="image" class="form-control" accept="image/*" onchange="readURL(this);">
+              <input type="hidden" name="hidden_image" id="hidden_image">
               </div>
-            </div>
-
+              </div>
+              <img id="modal-preview" src="https://via.placeholder.com/150" alt="Preview" class="form-group hidden" width="100" height="100">
             <div class="col-sm-offset-2 col-sm-10">
-              <button type="submit" class="btn btn-primary" id="btn-save" value="addNewEmployee">Save changes
+              <button type="submit" class="btn btn-primary" id="btn-save" value="create">Save changes
               </button>
             </div>
+
           </form>
         </div>
         <div class="modal-footer">          
@@ -117,15 +118,18 @@
     $(document).ready(function($){
 
         $.ajaxSetup({
-            headers: {
+          headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
+          }
         });
 
+
         $('#addNewEmployee').click(function () {
+          $('#employee_id').val('');
           $('#addEditEmployeeForm').trigger("reset");
           $('#ajaxEmployeeModal').html("Add Employee");
           $('#ajax-employee-modal').modal('show');
+          $('#modal-preview').attr('src', 'https://via.placeholder.com/150');
         });
     
 
@@ -148,50 +152,45 @@
 
         });
 
-
-        //  add employee
-        
-        // $('body').on('click', '#btn-save', function (event) {
-        // $('form').on('submit', '#btn-save', function (event) {
-            $( 'form' ).submit(function ( event ) {
-
-            //   var id = $("#id").val();
-            //   var email = $("#email").val();
-            //   var fullName = $("#fullName").val();
-            //   var dateOfJoining = $("#dateOfJoining").val();
-            //   var image = $("#image").value;
-            // //   var image = fullPath.split("\\").pop();
-            // //   console.log(fullPath);
-            //   console.log(image);
-            event.preventDefault();
-            var formData = new FormData(this);
-            console.log(formData);
-              $("#btn-save").html('Please Wait...');
-              $("#btn-save").attr("disabled", true);
-            
-            // ajax
-            $.ajax({
-                type:"POST",
-                url: "{{ url('api/employee') }}",
-                // data: {
-                //   id:id,
-                //   email:email,
-                //   fullName:fullName,
-                //   dateOfJoining:dateOfJoining,
-                //   image:image,
-                // },
-                data: formData,
-                dataType: 'json',
-                success: function(res){
-                window.location.reload();
-                $("#btn-save").html('Submit');
-                $("#btn-save"). attr("disabled", false);
-              }
-            });
-
-        });
-
     });
+
+    $('body').on('submit', '#addEditEmployeeForm', function (e) {
+      e.preventDefault();
+      var actionType = $('#btn-save').val();
+      $('#btn-save').html('Sending..');
+      var formData = new FormData(this);
+      // console.log(formData);
+      $.ajax({
+        type:'POST',
+        url: "{{ url('api/employee') }}",
+        data: formData,
+        cache:false,
+        contentType: false,
+        processData: false,
+        success: (data) => {
+          $('#addEditEmployeeForm').trigger("reset");
+          $('#ajax-employee-modal').modal('hide');
+          $('#btn-save').html('Save Changes');
+        },
+        error: function(data){
+          console.log('Error:', data);
+          $('#btn-save').html('Save Changes');
+        }
+      });
+    });
+    
+
+    function readURL(input, id) {
+      id = id || '#modal-preview';
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+          $('#modal-preview').attr('src', e.target.result);
+        };
+        reader.readAsDataURL(input.files[0]);
+        $('#modal-preview').removeClass('hidden');
+      }
+    }
   </script>
 </body>
 </html>
